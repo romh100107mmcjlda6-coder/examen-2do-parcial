@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>cotiza tus copias</title>
+    <style>
+        body {
+            background: #d3d3d3;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CUADRO GRANDE - TODO ADENTRO */
+        .cuadro {
+            background: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 20px;
+            width: 330px;
+        }
+
+        .cuadro h2 {
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        /* TITULO A COLOR */
+        .titulo {
+            color: rgb(208, 86, 246);
+            background: rgb(114, 68, 128);
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            margin: 0 0 15px 0;
+        }
+
+        label {
+            font-size: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 15px 0;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        /* CUADRITO COLOR / B/N */
+        .tipo {
+            border: 1px solid gray;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tipo p {
+            margin: 0 0 8px 0;
+        }
+
+        .credencial {
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px;
+            width: 48%;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-calcular {
+            background: rgb(156, 255, 156);
+        }
+
+        .btn-limpiar {
+            background: #ffffff;
+        }
+
+        .botones {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        #resultado {
+            color: rgb(211, 16, 255);
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        #detalle {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cuadro">
+        <h2>Formulario</h2>
+        <div class="titulo">Papelería Escolar</div>
+
+        <label>¿Cuántas copias quieres?</label><br>
+        <input type="text" id="copias" placeholder="Ej: 60">
+
+        <div class="tipo">
+            <p>Copias Color / B/N</p>
+            <label><input type="radio" name="tipo" value="color"> Color</label><br>
+            <label><input type="radio" name="tipo" value="bn"> Blanco y Negro</label>
+        </div>
+
+        <div class="credencial">
+            <label><input type="checkbox" id="credencial"> ¿Tiene credencial? -25%</label>
+        </div>
+
+        <div class="botones">
+            <button class="btn-calcular" onclick="calcular()">Calcular</button>
+            <button class="btn-limpiar" onclick="limpiar()">Limpiar</button>
+        </div>
+
+        <div id="resultado">Total a pagar: $0.00</div>
+        <div id="detalle"></div>
+    </div>
+
+    <script>
+        function calcular() {
+            let copias = document.getElementById("copias").value;
+            if (copias == "") {
+                alert("Escribe cuántas copias quieres");
+                return;
+            }
+            copias = parseInt(copias);
+
+            let tipo = document.querySelector('input[name="tipo"]:checked');
+            if (!tipo) {
+                alert("Elige si es Color o Blanco y Negro");
+                return;
+            }
+
+            let precio = 0;
+            if (copias >= 1 && copias <= 50) {
+                if (tipo.value == "color") precio = 1.50;
+                else precio = 1.00;
+            }
+            else if (copias >= 51 && copias <= 100) {
+                if (tipo.value == "color") precio = 1.30;
+                else precio = 0.80;
+            }
+            else if (copias > 100) {
+                if (tipo.value == "color") precio = 1.00;
+                else precio = 0.50;
+            }
+
+            let total = copias * precio;
+            let descuento = 0;
+
+            if (document.getElementById("credencial").checked) {
+                descuento = total * 0.25;
+                total = total - descuento;
+            }
+
+            document.getElementById("resultado").innerHTML = "Total a pagar: $" + total.toFixed(2);
+            document.getElementById("detalle").innerHTML = copias + " copias a $" + precio + " c/u. Descuento: $" + descuento.toFixed(2);
+        }
+
+        function limpiar() {
+            document.getElementById("copias").value = "";
+            document.querySelectorAll('input[name="tipo"]').forEach(r => r.checked = false);
+            document.getElementById("credencial").checked = false;
+            document.getElementById("resultado").innerHTML = "Total a pagar: $0.00";
+            document.getElementById("detalle").innerHTML = "";
+        }
+    </script>
+
+</body>
+
+</html>
